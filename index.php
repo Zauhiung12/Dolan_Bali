@@ -1,5 +1,23 @@
 <?php
 	include "connection/connection.php";
+
+	if(isset($_SESSION['username'])){
+		header("Location : home.php");
+	}
+	if(isset($_POST['login'])){
+		$email = $_POST['email'];
+		$password = md5($_POST['password']);
+
+		$sql = "SELECT * FROM login WHERE email = '$email' AND password = '$password'";
+		$result = mysqli_query($conn,$sql);
+		if($result -> num_rows > 0){
+			$data = mysqli_fetch_assoc($result);
+			$_SESSION['username'] = $data['username'];
+			header("Location : home.php");
+		}else{
+			echo "<script>alert('Email atau Password Anda salah. Silahkan coba lagi!')</script>";
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +53,7 @@
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form" id="formlogin" name="formlogin" method="POST" action="account/login.php">
+				<form class="login100-form validate-form" id="formlogin" name="formlogin" method="POST" action="">
 					<span class="login100-form-logo">
 						<i class="zmdi zmdi-landscape"></i>
 					</span>
@@ -45,12 +63,12 @@
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter email">
-						<input class="input100" type="email" name="email" id="email" placeholder="Email">
+						<input class="input100" type="email" name="email" id="email" placeholder="Email" value="<?php echo $email;?>">
 						<span class="focus-input100" data-placeholder="&#x2709;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" id="pass" placeholder="Password">
+						<input class="input100" type="password" name="password" id="password" placeholder="Password" value="<?php echo $_POST['password'];?>">
 						<span class="focus-input100" data-placeholder="&#xf191;"></span>
 					</div>
 

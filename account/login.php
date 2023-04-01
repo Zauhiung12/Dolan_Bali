@@ -2,17 +2,17 @@
 	include "../connection/connection.php";
 
 	$email = $_POST['email'];
-	$pass = $_POST['pass'];
+	$password = $_POST['password'];
 
-	if(($email != '') || ($pass != '')){
-		$sqlCek = "SELECT * FROM users WHERE email = '$email'";
+	if(!empty($email) || !empty($password)){
+		$sqlCek = "SELECT * FROM tblogin WHERE email = '$email'";
 		$queryCek = mysqli_query($conn,$sqlCek);
-		$numCek = mysqli_num_rows($queryCek);
 		$data = mysqli_fetch_array($queryCek);
+		$numCek = mysqli_num_rows($queryCek);
 		
 		if($numCek > 0){
-			if(password_verify($pass, $data['password'])){
-				$_SESSION['username'] = $data['name'];
+			if(password_verify($password, $data['password'])){
+				$_SESSION['username'] = $data['username'];
 				$_SESSION['user_autentification'] = 'valid';
 				header("location : ../home.php");
 			}else{
